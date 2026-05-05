@@ -9,8 +9,10 @@ import {
   usePollSession,
 } from "@/features/brainstorm/application/hooks";
 import CopySessionId from "@/ui/components/CopySessionId";
+import PrintButton from "@/ui/components/PrintButton";
 import RoleOpinionCard from "@/ui/components/RoleOpinionCard";
 import SessionErrorBanner from "@/ui/components/SessionErrorBanner";
+import ShareLinkButton from "@/ui/components/ShareLinkButton";
 import { SkeletonSessionPage } from "@/ui/components/Skeleton";
 import StageProgress from "@/ui/components/StageProgress";
 import SynthesisCard from "@/ui/components/SynthesisCard";
@@ -38,16 +40,39 @@ export default function SessionPage() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 p-8">
-      <header className="flex items-baseline justify-between">
+      <header className="flex flex-wrap items-baseline justify-between gap-3 print:hidden">
         <Link href="/" className="text-xs underline-offset-2 hover:underline">
           ← 새 질문
         </Link>
-        {session && <CopySessionId sessionId={session.id} />}
+        {session && (
+          <div className="flex flex-wrap items-baseline gap-3">
+            <ShareLinkButton sessionId={session.id} />
+            <PrintButton />
+            <CopySessionId sessionId={session.id} />
+          </div>
+        )}
       </header>
 
-      {pollError && <SessionErrorBanner error={pollError} />}
+      {session && (
+        <div className="hidden print:block">
+          <h1 className="text-base font-semibold">Roundtable 세션 결과</h1>
+          <p className="text-[11px] opacity-70">
+            세션 ID: {session.id} · 인쇄: {new Date().toLocaleString("ko-KR")}
+          </p>
+        </div>
+      )}
 
-      {!session && !pollError && <SkeletonSessionPage />}
+      {pollError && (
+        <div className="print:hidden">
+          <SessionErrorBanner error={pollError} />
+        </div>
+      )}
+
+      {!session && !pollError && (
+        <div className="print:hidden">
+          <SkeletonSessionPage />
+        </div>
+      )}
 
       {session && (
         <>
@@ -56,7 +81,9 @@ export default function SessionPage() {
             <p className="text-base leading-relaxed">{session.question}</p>
           </section>
 
-          <StageProgress status={session.status} currentStage={session.current_stage} />
+          <div className="print:hidden">
+            <StageProgress status={session.status} currentStage={session.current_stage} />
+          </div>
 
           {session.status === "FAILED" && (
             <p className="text-sm text-red-600 dark:text-red-400">

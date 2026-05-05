@@ -11,6 +11,8 @@ import {
 } from "@/features/brainstorm/domain/types";
 import StageContent from "@/ui/components/StageContent";
 
+const STAGES_FOR_PRINT: Stage[] = STAGE_ORDER.filter((s) => s !== "SYNTHESIS");
+
 interface Props {
   persona: Persona;
   responses: RoleResponse[];
@@ -29,7 +31,7 @@ export default function RoleOpinionCard({ persona, responses }: Props) {
   const isFailed = current?.is_failed ?? false;
 
   return (
-    <article className="space-y-3 rounded-xl border border-black/15 p-4 dark:border-white/15">
+    <article className="space-y-3 rounded-xl border border-black/15 p-4 dark:border-white/15 print:break-inside-avoid">
       <header className="flex items-baseline justify-between gap-2">
         <div>
           <h3 className="text-sm font-semibold">{persona.name}</h3>
@@ -38,18 +40,18 @@ export default function RoleOpinionCard({ persona, responses }: Props) {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="text-xs underline-offset-2 hover:underline"
+          className="text-xs underline-offset-2 hover:underline print:hidden"
         >
           {expanded ? "접기" : "단계별 보기 (자기비판·수정안)"}
         </button>
       </header>
 
       {!current && (
-        <p className="text-xs opacity-60">아직 응답이 도착하지 않았습니다.</p>
+        <p className="text-xs opacity-60 print:hidden">아직 응답이 도착하지 않았습니다.</p>
       )}
 
       {current && expanded && (
-        <>
+        <div className="space-y-3 print:hidden">
           <nav className="flex gap-1.5 text-[11px]">
             {VISIBLE_STAGES.map((stage) => {
               const has = byStage.has(stage);
@@ -81,14 +83,36 @@ export default function RoleOpinionCard({ persona, responses }: Props) {
           ) : (
             <StageContent stage={current.stage} content={current.content} />
           )}
-        </>
+        </div>
       )}
 
       {current && !expanded && current.content && (
-        <p className="line-clamp-2 text-xs leading-relaxed opacity-80">
+        <p className="line-clamp-2 text-xs leading-relaxed opacity-80 print:hidden">
           {summarize(current.content)}
         </p>
       )}
+
+      {/* 인쇄 전용: 모든 단계 펼쳐서 노출 */}
+      <div className="hidden space-y-4 print:block">
+        {STAGES_FOR_PRINT.map((stage) => {
+          const r = byStage.get(stage);
+          if (!r) return null;
+          return (
+            <section key={stage} className="space-y-2">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wide opacity-70">
+                {STAGE_LABELS[stage]}
+              </h4>
+              {r.is_failed ? (
+                <p className="text-xs text-red-600">
+                  실패: {r.error_message ?? "알 수 없는 오류"}
+                </p>
+              ) : (
+                <StageContent stage={r.stage} content={r.content} />
+              )}
+            </section>
+          );
+        })}
+      </div>
     </article>
   );
 }

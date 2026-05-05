@@ -40,7 +40,7 @@ export default function RoleOpinionCard({ persona, responses }: Props) {
           onClick={() => setExpanded((v) => !v)}
           className="text-xs underline-offset-2 hover:underline"
         >
-          {expanded ? "접기" : "펼치기"}
+          {expanded ? "접기" : "단계별 보기 (자기비판·수정안)"}
         </button>
       </header>
 

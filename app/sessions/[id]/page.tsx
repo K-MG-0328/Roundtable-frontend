@@ -39,7 +39,7 @@ export default function SessionPage() {
   }, [session, personaById]);
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 p-8">
+    <div className="mx-auto flex max-w-5xl flex-col gap-6 p-8 print:max-w-none print:p-0">
       <header className="flex flex-wrap items-baseline justify-between gap-3 print:hidden">
         <Link href="/" className="text-xs underline-offset-2 hover:underline">
           ← 새 질문

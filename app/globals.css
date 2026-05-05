@@ -26,6 +26,9 @@ body {
 }
 
 @media print {
+  @page {
+    margin: 1cm;
+  }
   body {
     background: #ffffff;
     color: #000000;

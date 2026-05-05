@@ -31,7 +31,7 @@ export default function RoleOpinionCard({ persona, responses }: Props) {
   const isFailed = current?.is_failed ?? false;
 
   return (
-    <article className="space-y-3 rounded-xl border border-black/15 p-4 dark:border-white/15 print:break-inside-avoid">
+    <article className="space-y-3 rounded-xl border border-black/15 p-4 dark:border-white/15">
       <header className="flex items-baseline justify-between gap-2">
         <div>
           <h3 className="text-sm font-semibold">{persona.name}</h3>
@@ -98,7 +98,7 @@ export default function RoleOpinionCard({ persona, responses }: Props) {
           const r = byStage.get(stage);
           if (!r) return null;
           return (
-            <section key={stage} className="space-y-2">
+            <section key={stage} className="space-y-2 print:break-inside-avoid">
               <h4 className="text-[11px] font-semibold uppercase tracking-wide opacity-70">
                 {STAGE_LABELS[stage]}
               </h4>

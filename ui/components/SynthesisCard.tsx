@@ -7,7 +7,7 @@ interface Props {
 function Section({ title, items }: { title: string; items: string[] }) {
   if (!items.length) return null;
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5 print:break-inside-avoid">
       <h4 className="text-xs font-semibold uppercase tracking-wide opacity-70">
         {title}
       </h4>
@@ -22,7 +22,7 @@ function Section({ title, items }: { title: string; items: string[] }) {
 
 export default function SynthesisCard({ synthesis }: Props) {
   return (
-    <article className="space-y-5 rounded-2xl border border-black/15 bg-black/[0.02] p-6 dark:border-white/15 dark:bg-white/[0.02] print:break-inside-avoid print:bg-transparent">
+    <article className="space-y-5 rounded-2xl border border-black/15 bg-black/[0.02] p-6 dark:border-white/15 dark:bg-white/[0.02] print:bg-transparent">
       <header className="space-y-1">
         <h2 className="text-lg font-semibold">종합 결과</h2>
         {synthesis.summary && <p className="text-sm leading-relaxed">{synthesis.summary}</p>}

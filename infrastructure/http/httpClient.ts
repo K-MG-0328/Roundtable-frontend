@@ -1,4 +1,5 @@
 import { env } from "@/infrastructure/config/env";
+import { getToken } from "@/features/auth/infrastructure/tokenStorage";
 
 export class HttpError extends Error {
   constructor(
@@ -17,11 +18,18 @@ export async function httpClient<T>(
 ): Promise<T> {
   const url = `${env.apiBaseUrl}${path}`;
 
+  const authHeader: Record<string, string> = {};
+  const token = getToken();
+  if (token) {
+    authHeader.Authorization = `Bearer ${token}`;
+  }
+
   const response = await fetch(url, {
     credentials: "include",
     ...options,
     headers: {
       "Content-Type": "application/json",
+      ...authHeader,
       ...options?.headers,
     },
   });

@@ -58,3 +58,16 @@ export const STAGE_LABELS: Record<Stage, string> = {
   REVISION: "4. 응답·수정",
   SYNTHESIS: "5. 종합",
 };
+
+export interface SessionSummary {
+  id: string;
+  question: string;
+  status: SessionStatus;
+  createdAt: string;
+  synthesisPresent: boolean;
+}
+
+export interface SessionListPage {
+  items: SessionSummary[];
+  nextCursor: string | null;
+}
